@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity // This class represents a table in the database
 public class Product {
     @Id
@@ -29,7 +28,6 @@ public class Product {
     @ManyToOne(cascade = CascadeType.ALL) //Many products to one category,
     // cascadeTypeAll==relationship goes away when product is deleted but the category is not deleted
 
-
     @JoinColumn(name = "category_id") //this creates the foreign key in the product table.
     private Category category;
 
@@ -38,5 +36,12 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
 
-
+    public Product(String name, String brand, BigDecimal price, int inventory, String description, Category category) {
+        this.name = name;
+        this.brand = brand;
+        this.price = price;
+        this.inventory = inventory;
+        this.description = description;
+        this.category = category;
+    }
 }
