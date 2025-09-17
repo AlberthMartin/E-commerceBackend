@@ -1,5 +1,7 @@
 package com.shoppingCartBackend.shoppingCartBackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +23,9 @@ public class Category {
 
     //One category can have many products
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Product> products;
+
 
     public Category(String name) {
         this.name = name;

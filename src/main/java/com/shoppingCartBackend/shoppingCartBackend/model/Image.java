@@ -1,5 +1,6 @@
 package com.shoppingCartBackend.shoppingCartBackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class Image {
     private String fileType;
 
     @Lob
+    @JsonIgnore
     private Blob image;
     private String downloadUrl;
 

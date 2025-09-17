@@ -1,5 +1,6 @@
 package com.shoppingCartBackend.shoppingCartBackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,10 +26,9 @@ public class Product {
     private String description;
 
     //Many products can belong to one Category
-    @ManyToOne(cascade = CascadeType.ALL) //Many products to one category,
-    // cascadeTypeAll==relationship goes away when product is deleted but the category is not deleted
-
+    @ManyToOne() //Many products to one category,
     @JoinColumn(name = "category_id") //this creates the foreign key in the product table.
+    @JsonBackReference
     private Category category;
 
     // One product can have many images
