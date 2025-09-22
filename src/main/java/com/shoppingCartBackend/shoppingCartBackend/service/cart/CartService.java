@@ -4,18 +4,20 @@ import com.shoppingCartBackend.shoppingCartBackend.exeptions.ResourceNotFoundExc
 import com.shoppingCartBackend.shoppingCartBackend.model.Cart;
 import com.shoppingCartBackend.shoppingCartBackend.repository.CartItemRepository;
 import com.shoppingCartBackend.shoppingCartBackend.repository.CartRepository;
+import com.shoppingCartBackend.shoppingCartBackend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CartService implements ICartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Cart getCart(Long cartId) {
@@ -45,6 +47,11 @@ public class CartService implements ICartService {
     public Long initializeNewCart() {
         Cart newCart = new Cart();
         return cartRepository.save(newCart).getId();
+    }
+
+    @Override
+    public Cart getCartByUserId(Long userId) {
+        return cartRepository.findByUserId(userId);
     }
 
 }

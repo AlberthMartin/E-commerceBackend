@@ -1,6 +1,7 @@
 package com.shoppingCartBackend.shoppingCartBackend.controller;
 
 import com.shoppingCartBackend.shoppingCartBackend.exeptions.ResourceNotFoundException;
+import com.shoppingCartBackend.shoppingCartBackend.model.User;
 import com.shoppingCartBackend.shoppingCartBackend.response.ApiResponse;
 import com.shoppingCartBackend.shoppingCartBackend.service.cart.CartItemService;
 import com.shoppingCartBackend.shoppingCartBackend.service.cart.ICartItemService;

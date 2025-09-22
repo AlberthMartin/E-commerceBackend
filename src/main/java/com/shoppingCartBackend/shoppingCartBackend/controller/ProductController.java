@@ -8,6 +8,7 @@ import com.shoppingCartBackend.shoppingCartBackend.model.Product;
 import com.shoppingCartBackend.shoppingCartBackend.request.AddProductRequest;
 import com.shoppingCartBackend.shoppingCartBackend.request.UpdateProductRequest;
 import com.shoppingCartBackend.shoppingCartBackend.response.ApiResponse;
+import com.shoppingCartBackend.shoppingCartBackend.service.product.IProductService;
 import com.shoppingCartBackend.shoppingCartBackend.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequestMapping("${api.prefix}/products")
 public class ProductController {
 
-    private final ProductService productService;
+    private final IProductService productService;
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts() {
