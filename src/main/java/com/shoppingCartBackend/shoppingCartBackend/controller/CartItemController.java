@@ -1,11 +1,13 @@
 package com.shoppingCartBackend.shoppingCartBackend.controller;
 
 import com.shoppingCartBackend.shoppingCartBackend.exeptions.ResourceNotFoundException;
+import com.shoppingCartBackend.shoppingCartBackend.model.Cart;
 import com.shoppingCartBackend.shoppingCartBackend.model.User;
 import com.shoppingCartBackend.shoppingCartBackend.response.ApiResponse;
 import com.shoppingCartBackend.shoppingCartBackend.service.cart.CartItemService;
 import com.shoppingCartBackend.shoppingCartBackend.service.cart.ICartItemService;
 import com.shoppingCartBackend.shoppingCartBackend.service.cart.ICartService;
+import com.shoppingCartBackend.shoppingCartBackend.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +20,15 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class CartItemController {
     private final ICartItemService cartItemService;
     private final ICartService cartService;
+    private final IUserService userService;
 
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId,
-                                                     @RequestParam Long productId,
-                                                     @RequestParam int quantity) {
+    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long productId, @RequestParam int quantity) {
         try {
-            if (cartId == null) {
-                cartId = cartService.initializeNewCart();
-            }
-            cartItemService.addItemToCart(cartId, productId, quantity);
+            User user = userService.getUserById(4L);
+            Cart cart = cartService.initializeNewCart(user);
+
+            cartItemService.addItemToCart(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("item added to cart", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));

@@ -33,19 +33,24 @@ public class CartItemService implements ICartItemService {
         CartItem cartItem = cart.getItems()
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst().orElse(new CartItem());
+                .findFirst()
+                .orElse(null);
 
-        if(cartItem.getId() == null){
+        if(cartItem == null){
+            cartItem = new CartItem();
             cartItem.setProduct(product);
             cartItem.setCart(cart);
             cartItem.setQuantity(quantity);
             cartItem.setUnitPrice(product.getPrice());
+            cart.addItem(cartItem);
         }
         else{
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
         }
+
         cartItem.setTotalPrice();
-        cart.addItem(cartItem);
+        cart.updateTotalPrice();
+
         cartItemRepository.save(cartItem);
         cartRepository.save(cart);
 

@@ -1,8 +1,10 @@
 package com.shoppingCartBackend.shoppingCartBackend.service.user;
 
+import com.shoppingCartBackend.shoppingCartBackend.dto.OrderDto;
 import com.shoppingCartBackend.shoppingCartBackend.dto.UserDto;
 import com.shoppingCartBackend.shoppingCartBackend.exeptions.AlreadyExistsException;
 import com.shoppingCartBackend.shoppingCartBackend.exeptions.ResourceNotFoundException;
+import com.shoppingCartBackend.shoppingCartBackend.model.Order;
 import com.shoppingCartBackend.shoppingCartBackend.model.User;
 import com.shoppingCartBackend.shoppingCartBackend.repository.UserRepository;
 import com.shoppingCartBackend.shoppingCartBackend.request.CreateUserRequest;
@@ -57,6 +59,19 @@ public class UserService implements IUserService {
     }
     @Override
     public UserDto convertUserToDto(User user) {
-        return modelMapper.map(user, UserDto.class);
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+    // Make sure orders are mapped manually if needed
+    if (user.getOrders() != null) {
+        userDto.setOrders(
+            user.getOrders().stream()
+                    .map(this::convertToDto)
+                    .toList()
+        );
     }
+    return userDto;
+    }
+
+    private OrderDto convertToDto(Order order) {
+    return modelMapper.map(order, OrderDto.class);
+}
 }

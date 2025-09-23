@@ -33,6 +33,7 @@ public class Product {
 
     // One product can have many images
     //If a product is deleted, its associated images are deleted too (orphanRemoval = true).
+    @JsonBackReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
 

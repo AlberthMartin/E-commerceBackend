@@ -2,6 +2,7 @@ package com.shoppingCartBackend.shoppingCartBackend.service.cart;
 
 import com.shoppingCartBackend.shoppingCartBackend.exeptions.ResourceNotFoundException;
 import com.shoppingCartBackend.shoppingCartBackend.model.Cart;
+import com.shoppingCartBackend.shoppingCartBackend.model.User;
 import com.shoppingCartBackend.shoppingCartBackend.repository.CartItemRepository;
 import com.shoppingCartBackend.shoppingCartBackend.repository.CartRepository;
 import com.shoppingCartBackend.shoppingCartBackend.repository.UserRepository;
@@ -34,7 +35,8 @@ public class CartService implements ICartService {
         Cart cart = getCart(cartId);
         cartItemRepository.deleteAllByCartId(cartId);
         cart.getItems().clear();
-        cartRepository.deleteById(cartId);
+        cart.setTotalPrice(BigDecimal.ZERO);
+        cartRepository.save(cart);
     }
 
     @Override
@@ -44,9 +46,13 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public Long initializeNewCart() {
-        Cart newCart = new Cart();
-        return cartRepository.save(newCart).getId();
+    public Cart initializeNewCart(User user) {
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(() -> {
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    return cartRepository.save(cart);
+                });
     }
 
     @Override

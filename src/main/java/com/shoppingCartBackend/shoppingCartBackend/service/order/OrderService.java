@@ -7,6 +7,7 @@ import com.shoppingCartBackend.shoppingCartBackend.model.Cart;
 import com.shoppingCartBackend.shoppingCartBackend.model.Order;
 import com.shoppingCartBackend.shoppingCartBackend.model.OrderItem;
 import com.shoppingCartBackend.shoppingCartBackend.model.Product;
+import com.shoppingCartBackend.shoppingCartBackend.repository.CartRepository;
 import com.shoppingCartBackend.shoppingCartBackend.repository.OrderRepository;
 import com.shoppingCartBackend.shoppingCartBackend.repository.ProductRepository;
 import com.shoppingCartBackend.shoppingCartBackend.service.cart.CartService;
@@ -16,6 +17,7 @@ import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class OrderService implements IOrderService {
     private final ProductRepository productRepository;
     private final CartService cartService;
     private final ModelMapper modelMapper;
+    private final CartRepository cartRepository;
 
     @Override
     public Order placeOrder(Long userId) {
@@ -38,7 +41,11 @@ public class OrderService implements IOrderService {
         order.setTotalPrice(calculateTotalPrice(orderItemList));
 
         Order savedOrder = orderRepository.save(order);
-        cartService.clearCart(cart.getId());
+
+        // Clear the cart properly without deleting it
+        cart.getItems().clear();
+        cart.setTotalPrice(BigDecimal.ZERO);
+        cartRepository.save(cart);
 
         return savedOrder;
     }
@@ -46,8 +53,8 @@ public class OrderService implements IOrderService {
     private Order createOrder(Cart cart) {
         Order order = new Order();
         order.setUser(cart.getUser());
-        order.setOrderStatus(OrderStatus.PENDING);
-        order.setOrderDate(LocalDate.now());
+        order.setStatus(OrderStatus.PENDING);
+        order.setOrderDate(LocalDateTime.now());
         return order;
     }
 
@@ -76,16 +83,18 @@ public class OrderService implements IOrderService {
     @Override
     public OrderDto getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
-                .map(this :: convertToDto)
+                .map(this::convertToDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
+
     @Override
     public List<OrderDto> getUserOrders(Long userId) {
         List<Order> orders = orderRepository.findByUserId(userId);
-        return orders.stream().map(this ::convertToDto).toList();
+        return orders.stream().map(this::convertToDto).toList();
     }
 
-    private OrderDto convertToDto(Order order) {
+    @Override
+    public OrderDto convertToDto(Order order) {
         return modelMapper.map(order, OrderDto.class);
     }
 }
