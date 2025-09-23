@@ -1,1 +1,10 @@
-<img width="664" height="416" alt="Screenshot 2025-09-10 at 15 30 11" src="https://github.com/user-attachments/assets/3a2a37b1-b515-4ba4-99b0-e383b3878bb6" />
+# Spring Boot E-commerce Store Backend built with Java Spring Boot, MySQL, Spring Security, JWT
+
+## This project is still being built 
+
+## Database
+<img width="756" height="698" alt="image" src="https://github.com/user-attachments/assets/2f1387c9-124f-4161-970b-079999ed37eb" />
+
+
+## REST API endpoints
+added here soon.
