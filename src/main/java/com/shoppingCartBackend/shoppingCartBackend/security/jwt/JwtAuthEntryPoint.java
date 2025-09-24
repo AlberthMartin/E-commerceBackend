@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+//First thing that a request goes through to see if it is authorized to do this
+
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
@@ -27,7 +29,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
         final Map<String, Object> body = new HashMap<>();
         body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
         body.put("error","Unauthorized");
-        body.put("message",authException.getMessage());
+        body.put("message", "You need to login and try again"); //Message the user sees if they are unathorized
         body.put("path",request.getServletPath());
 
         final ObjectMapper mapper = new ObjectMapper();

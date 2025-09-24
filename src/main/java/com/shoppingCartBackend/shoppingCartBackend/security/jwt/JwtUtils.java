@@ -22,11 +22,14 @@ public class JwtUtils {
 
     @Value("${auth.token.jwtSecret}")
     private String jwtSecret;
-    @Value("${auth.token.exparationInMils}")
-    private String expirationTime;
+    @Value("${auth.token.expirationInMils}")
+    private long expirationTime;
 
     public String generateJwtTokenForUser(Authentication authentication) {
         ShopUserDetails userPrincipal = (ShopUserDetails) authentication.getPrincipal(); //get logged in user
+
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expirationTime);
 
         List<String> roles = userPrincipal.getAuthorities()
                 .stream()
@@ -36,8 +39,8 @@ public class JwtUtils {
                 .setSubject(userPrincipal.getEmail())
                 .claim("id", userPrincipal.getId())
                 .claim("roles", roles)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + expirationTime))
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
                 .signWith(key(), SignatureAlgorithm.HS256).compact();
     }
 
