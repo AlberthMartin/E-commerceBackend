@@ -7,6 +7,7 @@ I built this project to deepen my understanding of how to develop a professional
 - Spring Boot
 - Spring Data JPA (Hibernate)
 - Spring Security
+- Spring Web
 - JWT Authentication
 - MySQL Database
 - Maven
